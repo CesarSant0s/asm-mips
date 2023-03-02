@@ -1,58 +1,58 @@
-# Define as constantes para as operações
-addi $zero, $zero, 0  # zero
-addi $v0, $zero, 4    # print_string
-addi $v1, $zero, 5    # read_int
-syscall
+.data
+prompt: .asciiz "Digite um n�mero: "
+result: .asciiz "O n�mero de Fibonacci �: "
 
-# Lê o valor de n
-add $s0, $zero, $v0   # Armazena o valor lido em $s0
+.text
+.globl main
 
-# Chama a função recursiva e armazena o resultado em $s1
-addi $sp, $sp, -8     # Reserva espaço para $ra e $s1 na pilha
-sw   $ra, 0($sp)      # Salva o endereço de retorno na pilha
-sw   $s1, 4($sp)      # Salva o valor de retorno na pilha
-jal  fibonacci        # Chama a função recursiva
-lw   $s1, 4($sp)      # Carrega o valor de retorno da pilha em $s1
-lw   $ra, 0($sp)      # Restaura o endereço de retorno da pilha
-addi $sp, $sp, 8      # Libera o espaço reservado na pilha
+# Fun��o principal
+main:
+    # Exibe a mensagem de prompt e l� a entrada do usu�rio
+    li 		$v0, 4		# adiciona o codigo do syscall
+    la 		$a0, prompt	# carregar a string
+    syscall
+    
+    li 		$v0, 5		# adiciona o codigo do syscall
+    syscall
+    move 	$a0, $v0  	# Salva o input em $a0
+    add		$a0, $a0, -1	# reduzindo o valor de n (j� que o metodo soma todos os valores at� n)
+    
+    jal 	fibonacci	# Chama a fun��o que come�a a s�rie de Fibonacci
+    move 	$t0, $v0	# move o retorno do metodo para o reg $t0 ($v0 sera sobrescrito para chamar o syscall)
+    
+    li 		$v0, 4		# adiciona o codigo do syscall para exibe o resultado na tela
+    la 		$a0, result	# carregar a string
+    syscall
+    
+    move 	$a0, $t0   	# Move o resultado para o registrador de argumento
+    li 		$v0, 1		# adiciona o codigo do syscall
+    syscall
+    
+    li 		$v0, 10		# adiciona o codigo do syscall para terminar o programa
+    syscall
 
-# Imprime o resultado
-addi $v0, $zero, 1    # print_int
-add $a0, $s1, $zero   # Passa o valor de retorno como argumento
-syscall
-
-# Sai do programa
-addi $v0, $zero, 10   # exit
-syscall
-
-
-# Implementação da função fibonacci
 fibonacci:
-  addi $sp, $sp, -8     # Reserva espaço para $ra e $s1 na pilha
-  sw   $ra, 0($sp)      # Salva o endereço de retorno na pilha
-  sw   $s1, 4($sp)      # Salva o valor de retorno na pilha
-  
-  # Verifica se n é 0 ou 1 e retorna o valor correspondente
-  beq  $s0, $zero, zero # Se n = 0, retorna 0
-  beq  $s0, $at, one   # Se n = 1, retorna 1
-  
-  # Chama a função recursiva para n - 1 e armazena o resultado em $t0
-  addi $s0, $s0, -1     # Decrementa n
-  jal  fibonacci
-  add  $t0, $zero, $v0  # Armazena o resultado em $t0
-  
-  # Chama a função recursiva para n - 2 e armazena o resultado em $t1
-  addi $s0, $s0, -1     # Decrementa n novamente
-  jal  fibonacci
-  add  $t1, $zero, $v0  # Armazena o resultado em $t1
-  
-  # Soma os resultados e armazena o resultado final em $s1
-  add  $s1, $t0, $t1    # Soma os resultados
-  j    end              # Pula para o final da função
-  
-zero:
-  addi $v0, $zero, 0    # Retorna 0
-  j    done
+    bgt 	$a0, 1, fib_recursivo	# confere se o valor em $a0 � maior que 1
+    move	$v0, $a0		# move $a0 para $v0 para retornar o resultado.
+    jr		$ra			# retorno a chamada do metodo
 
-one:
-  addi $v0, $zero,
+# Fun��o recursiva de Fibonacci
+fib_recursivo:
+    sub		$sp, $sp, 12		# alocando 4 espacos na pilha
+    sw		$ra, 0($sp)		# salvando o $ra anterior
+    sw		$a0, 4($sp)		# salvando o n
+    
+    add		$a0, $a0, -1		# encontrando n-1
+    jal		fibonacci		# encontrando fib(n-1)
+    lw		$a0, 4($sp)		# recuperando o n
+    sw		$v0, 8($sp)		# salvando fib(n-1) na 3 posi��o da pilha
+    
+    add		$a0, $a0, -2		# encontrando n-2 atrav�s do n recuperado acima
+    jal		fibonacci		# encontrando fib(n-2)
+    
+    lw		$t0, 8($sp)		# recuperando fib(n-1)
+    add		$v0, $t0, $v0		# somando os valores de fib(n-1) [$t0] e fib(n-2) [retornado em $v0]
+    
+    lw		$ra, 0($sp)		# restaurando o valor do $ra
+    add 	$sp, $sp, 12		# restaurando a pilha
+    jr		$ra			# retorno a chamada do metodo
