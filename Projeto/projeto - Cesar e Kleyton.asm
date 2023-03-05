@@ -41,7 +41,7 @@ main:
 roteamento:
     # Carrega o endereço da string e o tamanho máximo permitido
     move 	$s0, $a0
-    add		$a3, $zero, $a3
+    add		$a3, $zero, 6
        
     
     la 	$a1, ad_morador
