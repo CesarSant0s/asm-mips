@@ -41,7 +41,7 @@ main:
 roteamento:
     # Carrega o endereço da string e o tamanho máximo permitido
     move 	$s0, $a0
-    sb 		$zero, 6($a0) 
+    add		$a3, $zero, $a3
        
     
     la 	$a1, ad_morador
@@ -162,18 +162,20 @@ roteamento:
 strcmp:
         li $t0, 0     		# inicializa o contador
     loop:
+        beq $t0, $a3, end       # Se i = num, retorna 0 (strings são iguais até o num-ésimo caractere)
         lb $t1, ($a0) 		# carrega o caractere atual de str1
         lb $t2, ($a1) 		# carrega o caractere atual de str2
         beq $t1, $zero, end   	# se str1 acabou, termina
         beq $t2, $zero, end   	# se str2 acabou, termina
-        sub $t3, $t1, $t2     	# compara os caracteres
+        sub $t3, $t1, $t2    	# compara os caracteres
         bne $t3, $zero, end   	# se os caracteres são diferentes, termina
         addi $t0, $t0, 1      	# incrementa o contador
         addi $a0, $a0, 1      	# avança para o próximo caractere de str1
-        addi $a1, $a1, 1     	# avança para o próximo caractere de str2
+        addi $a1, $a1, 1      	# avança para o próximo caractere de str2
         j loop
-end:
-        sub $v0, $t1, $t2 	# retorna o valor da comparação
+
+    end:
+        sub $v0, $t1, $t2  	# retorna o valor da comparação
         sub $a0, $a0, $t0	# restaura $a0 para a posição inicial da string.
         jr $ra    
             
