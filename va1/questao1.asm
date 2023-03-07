@@ -39,7 +39,7 @@
     la      $t1,        c1                          # Seta o endereco do caractere a ser substituido
     lb      $a1,        0($t1)                      # Usa o endereco em $t1 para carrecar o caractere
     la      $t1,        c2                          # Seta o endereco do caractere a substituto
-    lb      $a2,        0($t1)                      # Usa o endereço em $t1 para carrecar o caractere substituto
+    lb      $a2,        0($t1)                      # Usa o endereco em $t1 para carrecar o caractere substituto
 
     li      $t1,        0                           # Indice da proxima posicao para escrever na nova string
     la      $t2,        0($a0)                      # ponteiro para a string original
@@ -50,12 +50,12 @@ loop:
     beqz    $t4,        end                         # se for o caractere nulo, termina o loop
     beq     $t4,        $a1,        replace_char    # se for o caractere antigo, substitui
     sb      $t4,        0($t3)                      # senao, copia o caractere para a nova string
-    addi    $t1,        $t1,        1               # avanca o ponteiro para a proxima posi??o na nova string
+    addi    $t1,        $t1,        1               # avanca o ponteiro para a proxima posicao na nova string
     j       next_char
 
 replace_char:
     sb      $a2,        0($t3)                      # substitui o caractere antigo pelo novo
-    addi    $t1,        $t1,        1               # avanca o ponteiro para a pr?xima posicao na nova string
+    addi    $t1,        $t1,        1               # avanca o ponteiro para a proxima posicao na nova string
 
 next_char:
     addi    $t2,        $t2,        1               # avanca o ponteiro para o proximo caractere na string original
