@@ -1,3 +1,9 @@
+# Grupo: Cesar Santos e Kleyton Clementino 
+# Atividade 1VA
+# Disciplina: Arquitetura e Organizacao de Computadores (LC-2022.1 UFRPE)
+# Questão 3.
+# Algoritmo que pede um numero 'n', e em seguida calcula qual o n-esimo valor da serie fibonacci, e printa o número na tela.
+
 .data
 prompt: .asciiz "Digite um numero: "
 result: .asciiz "O numero de Fibonacci e: "

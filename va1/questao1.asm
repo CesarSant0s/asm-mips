@@ -1,3 +1,10 @@
+# Grupo: Cesar Santos e Kleyton Clementino 
+# Atividade 1VA
+# Disciplina: Arquitetura e Organizacao de Computadores (LC-2022.1 UFRPE)
+# Questão 1.
+# Algoritmo que substitue todos os caracteres 'x' de uma string por um caractere 'y' e imprime a nova string
+
+
 .data
     string: .space 25
     c1: .space 2

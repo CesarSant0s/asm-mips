@@ -1,3 +1,9 @@
+# Grupo: Cesar Santos e Kleyton Clementino 
+# Atividade 1VA
+# Disciplina: Arquitetura e Organizacao de Computadores (LC-2022.1 UFRPE)
+# Questão 2.
+# Algoritmo que conta quantos caracteres a string fornecida possui e imprime o valor total de caracteres.
+
 .data
     string: .space 255
     newline: .asciiz "\n"

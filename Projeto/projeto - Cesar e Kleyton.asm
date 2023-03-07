@@ -1,3 +1,9 @@
+# Grupo: Cesar Santos e Kleyton Clementino 
+# Atividade 1VA
+# Disciplina: Arquitetura e Organizacao de Computadores (LC-2022.1 UFRPE)
+# Projeto
+
+
 .data
 prompt: .asciiz "Digite uma string: "
 comando: .space 100
@@ -25,76 +31,73 @@ teste2: .asciiz "limpo\n"
 # Função principal
 main:
     # Exibe a mensagem de prompt e lê a entrada do usuário
-    li $v0, 4
-    la $a0, prompt
+    li 		$v0, 4			# adiciona o codigo do syscall para escrever a string
+    la 		$a0, prompt		# carregar a string no argumento do syscall
     syscall
     
-    li $v0, 8
-    la $a0, comando
-    li $a1, 100
+    li 		$v0, 8			# Adiciona o codigo para o syscall
+    la 		$a0, comando		# Adiciona o endereco da string como argumento do syscall
+    li 		$a1, 100		# Segundo argumento do syscall, final da string.
     syscall
-        
-    # Chama a função de roteamento
-    jal roteamento
     
+    jal 	roteamento		# Chama a função de roteamento
     
-    j exit
+    j 		exit			# Chama a função de parar o programa	
 
 # Função de roteamento
 roteamento:
     # Carrega o endereço da string e o tamanho máximo permitido
-    move 	$s7, $a0
-    add		$a3, $zero, 6
+    move 	$s7, $a0			# salvando em s7 o endereço da string por precaucao
+    add		$a3, $zero, 6			# limitando o tamanho maximo da string para comparacao
        
     
-    la 	$a1, ad_morador
-    jal strcmp
-    beq $v0, $zero, AdicionarMorador
+    la 		$a1, ad_morador			# salva o endereço da string de comparacao em a1 para adicionar morador
+    jal 	strcmp				# chama o comparador de strings
+    beq 	$v0, $zero, AdicionarMorador	# rotea o codigo para a funcao de adicionar morador
     
-    la 	$a1, rm_modador
-    jal strcmp
-    beq $v0, $zero, RemoverMorador
+    la 		$a1, rm_modador			# salva o endereço da string de comparacao em a1 para remover morador
+    jal 	strcmp				# chama o comparador de strings
+    beq 	$v0, $zero, RemoverMorador	# rotea o codigo para a funcao de remover morador
     
-    la 	$a1, ad_auto
-    jal strcmp
-    beq $v0, $zero, AdicionarAutomovel
+    la 		$a1, ad_auto			# salva o endereço da string de comparacao em a1 para adicionar automovel
+    jal 	strcmp				# chama o comparador de strings
+    beq 	$v0, $zero, AdicionarAutomovel	# rotea o codigo para a funcao de adicionar automovel
     
-    la 	$a1, rm_auto
-    jal strcmp
-    beq $v0, $zero, RemoverAutomovel
+    la 		$a1, rm_auto			# salva o endereço da string de comparacao em a1 para remover automovel
+    jal 	strcmp				# chama o comparador de strings
+    beq 	$v0, $zero, RemoverAutomovel	# rotea o codigo para a funcao de remover automovel
     
-    la 	$a1, limpar_ap
-    jal strcmp
-    beq $v0, $zero, LimparApartamento
+    la 		$a1, limpar_ap			# salva o endereço da string de comparacao em a1 para limpar apto
+    jal 	strcmp				# chama o comparador de strings
+    beq		$v0, $zero, LimparApartamento	# rotea o codigo para a funcao de limpar apto
     
-    la 	$a1, info_ap
-    jal strcmp
-    beq $v0, $zero, InfoApartamento
+    la 		$a1, info_ap			# salva o endereço da string de comparacao em a1 para obter info do apto
+    jal 	strcmp				# chama o comparador de strings
+    beq 	$v0, $zero, InfoApartamento	# rotea o codigo para a funcao de informacao de apto
     
-    la 	$a1, info_geral
-    jal strcmp
-    beq $v0, $zero, InfoGeral
+    la 		$a1, info_geral			# salva o endereço da string de comparacao em a1 para obter infos gerais	
+    jal 	strcmp				# chama o comparador de strings
+    beq 	$v0, $zero, InfoGeral		# rotea o codigo para a funcao de infos gerais
     
-    la 	$a1, salvar
-    jal strcmp
-    beq $v0, $zero, SalvarDados
+    la 		$a1, salvar			# salva o endereço da string de comparacao em a1 para salvar em arquivo
+    jal 	strcmp				# chama o comparador de strings
+    beq 	$v0, $zero, SalvarDados		# rotea o codigo para a funcao de salvar arquivo
     
-    la 	$a1, recarregar
-    jal strcmp
-    beq $v0, $zero, RecarregarDados
+    la 		$a1, recarregar			# salva o endereço da string de comparacao em a1 para carregar os arquivos
+    jal 	strcmp				# chama o comparador de strings
+    beq 	$v0, $zero, RecarregarDados	# rotea o codigo para a funcao de recarregar dados
     
-    la 	$a1, formatar
-    jal strcmp
-    beq $v0, $zero, FormatarDados
+    la 		$a1, formatar			# salva o endereço da string de comparacao em a1 para apagar os registros
+    jal 	strcmp				# chama o comparador de strings
+    beq 	$v0, $zero, FormatarDados	# rotea o codigo para a funcao de formatar dados
     
 # adicionar um novo morador    
 AdicionarMorador:
-    #ad_morador- [11 chars]  ad_morador-000-xxxxxxxxxxxxxxxx
             
     jal 	EncontrarSubstring	# removendo o comando, v0 como retorno
     
-    add		$a0, $s0, 1		# pular o char '-'
-    jal 	EncontrarSubstring	# v0 possui o valor do apto
+    add		$a0, $s0, 1		# pular o char '-' apos o comando
+    jal 	EncontrarSubstring	# v0 possui o valor do apto (ultimo char do numero do apto)
     move 	$s4, $a0		# s4 contem o primeiro numero do apto
     sub		$s3, $v0, $s4		# s3 possui o numero de bytes do numero apto
     move	$s1, $v0		# s1 contem o ultimo numero do apto
@@ -103,35 +106,34 @@ AdicionarMorador:
     lb 		$t2, 2($s4)		# carrega o numero do apartamento
     beqz 	$t2, UltimoAndar 	#verificar se o apartamento eh no ultimo andar
     
-    jal 	BuscarIndiceArray	# busca o indice do array
+    jal 	BuscarIndiceArray	# busca o indice do array (apartamentos) em que o apto em questão fica posicionado
     move 	$a3, $v0		# move o retorno (indice do array) da funcao para a3
     
-    la		$a0, apartamentos($a3)	# carrega o enderoço do array em a1
-    move	$a1, $s4
+    la		$a0, apartamentos($a3)	# carrega o endereço do array em a1
+    move	$a1, $s4		# move a string com o endereço do apto para a1
     add 	$a2, $0, $s3		# 4 bytes de espaço para o apto
-    jal		memcpy 
+    jal		memcpy 			# copia o numero do apto para o array
     
-    add		$a0, $s1, 1		# # restauro o antigo valor de a0 e pular o char '-'
-    jal 	EncontrarSubstring	# v0 possui o nome do morador
-    move 	$s4, $a0
-    sub		$s3, $v0, $s4		# s3 possui o numero de bytes do numero apto
-    move	$s1, $v0		# numero do apto movido pra s1
+    add		$a0, $s1, 1		# a0 vai para o indice apos o char '-' (comeco do nome)
+    jal 	EncontrarSubstring	# v0 possui o ultimo indice nome do morador
+    move 	$s4, $a0		# move o endereco como nome para s4
+    sub		$s3, $v0, $s4		# s3 possui o numero de bytes do nome do morador
+    move	$s1, $v0		# move o final do endereco do nome para s1
     
-    la		$a0, apartamentos($a3)	# carrega o enderoço do array em a1
-    move	$a1, $s4
+    la		$a0, apartamentos($a3)	# carrega o endereco do array em a0
+    move	$a1, $s4		# move o inicio do endereco com o nome do morador para a0
     add 	$a2, $0, $s3		# bytes de espaço para o nome do morador
-    addi	$a0, $a0, 5
-    jal		memcpy 
+    addi	$a0, $a0, 5		# pulo 5 espaços (espaco reservado para o numero do apartamento)
+    jal		memcpy 			# copia o nome do morador para o array
     
         
     la		$a0, apartamentos($a3)	# carrega o enderoço do array em a1
-    li 		$v0, 4		# adiciona o codigo do syscall
-    syscall			#imprimi o numero
+    li 		$v0, 4			# adiciona o codigo do syscall
+    syscall				# imprime o numero
     
-    li		$v0, 4
-    la 		$a0, apartamentos($a3)
-    addi	$a0, $a0, 5
-    syscall	
+    la 		$a0, apartamentos($a3)	# carrega o enderoço do array em a1
+    addi	$a0, $a0, 5		# pulo 5 espaços (espaco reservado para o numero do apartamento)
+    syscall				# imprime o nome do morador
     
     jal		main			#retorna para o main
     
